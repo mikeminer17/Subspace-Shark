@@ -5,7 +5,7 @@ exists()
   command -v "$1" >/dev/null 2>&1
 }
 if exists curl; then
-	echo ''
+  echo ''
 else
   sudo apt update && sudo apt install curl -y < "/dev/null"
 fi
@@ -15,11 +15,10 @@ if [ -f "$bash_profile" ]; then
 fi
 sleep 1 && curl -s https://raw.githubusercontent.com/f5nodes/logo/main/logo-shark.sh | bash && sleep 1
 
-
 cd $HOME
 rm -rf subspace*
-wget -O subspace-node https://github.com/subspace/subspace/releases/download/snapshot-2022-mar-09/subspace-node-ubuntu-x86_64-snapshot-2022-mar-09
-wget -O subspace-farmer https://github.com/subspace/subspace/releases/download/snapshot-2022-mar-09/subspace-farmer-ubuntu-x86_64-snapshot-2022-mar-09
+wget -O subspace-node https://github.com/subspace/subspace/releases/download/gemini-1a-2022-may-31/subspace-node-ubuntu-x86_64-gemini-1a-2022-may-31
+wget -O subspace-farmer https://github.com/subspace/subspace/releases/download/gemini-1a-2022-may-31/subspace-farmer-ubuntu-x86_64-gemini-1a-2022-may-31
 chmod +x subspace*
 mv subspace* /usr/local/bin/
 
@@ -33,7 +32,7 @@ After=network.target
 [Service]
 User=$USER
 Type=simple
-ExecStart=$(which subspace-node) --chain testnet --wasm-execution compiled --execution wasm --bootnodes \"/dns/farm-rpc.subspace.network/tcp/30333/p2p/12D3KooWPjMZuSYj35ehced2MTJFf95upwpHKgKUrFRfHwohzJXr\" --rpc-cors all --rpc-methods unsafe --ws-external --validator --telemetry-url \"wss://telemetry.polkadot.io/submit/ 1\" --telemetry-url \"wss://telemetry.subspace.network/submit 1\" --name $SUBSPACE_NODENAME
+ExecStart=$(which subspace-node) --chain gemini-1 --execution wasm --pruning 1024 --keep-blocks 1024 --validator --name $SUBSPACE_NODENAME
 Restart=on-failure
 LimitNOFILE=65535
 
@@ -48,7 +47,7 @@ After=network.target
 [Service]
 User=$USER
 Type=simple
-ExecStart=$(which subspace-farmer) farm --reward-address $SUBSPACE_WALLET
+ExecStart=$(which subspace-farmer) farm --reward-address $SUBSPACE_WALLET --plot-size $PLOT_SIZE
 Restart=on-failure
 LimitNOFILE=65535
 
@@ -64,22 +63,21 @@ sudo systemctl restart subspaced
 sleep 10
 sudo systemctl restart subspaced-farmer
 
-echo "==================================================="
-echo -e '\n\e[42mСтатус ноди\e[0m\n' && sleep 1
+echo -e "\n\e[93mSubspace Gemini Incentivized Testnet\e[0m"
+echo -e '\n\e[94mСтатус ноди\e[0m\n' && sleep 1
 if [[ `service subspaced status | grep active` =~ "running" ]]; then
-  echo -e "Ваша Subspace нода \e[32mвстановлена та працює\e[39m!"
-  echo -e "Перевірити статус Вашої ноди можна командою \e[7mservice subspaced status\e[0m"
-  echo -e "Нажміть \e[7mQ\e[0m щоб вийти з статус меню"
+  echo -e "Ваша Subspace нода \e[92mвстановлена та працює\e[0m!"
+  echo -e "Перевірити статус Вашої ноди можна командою \e[92mservice subspaced status\e[0m"
+  echo -e "Натисність \e[92mQ\e[0m щоб вийти з статус меню"
 else
-  echo -e "Ваша Subspace нода \e[31mбула встановлена неправильно\e[39m, виконайте перевстановлення."
+  echo -e "Ваша Subspace нода \e[91mбула встановлена неправильно\e[39m, виконайте перевстановлення."
 fi
 sleep 2
-echo "==================================================="
-echo -e '\n\e[42mFarmer статус\e[0m\n' && sleep 1
+echo -e '\n\e[94mFarmer статус\e[0m\n' && sleep 1
 if [[ `service subspaced-farmer status | grep active` =~ "running" ]]; then
-  echo -e "Ваш Subspace farmer \e[32mвстановлений та працює\e[39m!"
-  echo -e "Перевірити статус Вашого farmer можна командою \e[7mservice subspaced-farmer status\e[0m"
-  echo -e "Нажміть \e[7mQ\e[0m щоб вийти з статус меню"
+  echo -e "Ваш Subspace farmer \e[92mвстановлений та працює\e[0m!"
+  echo -e "Перевірити статус Вашого farmer можна командою \e[92mservice subspaced-farmer status\e[0m"
+  echo -e "Натисність \e[92mQ\e[0m щоб вийти з статус меню"
 else
-  echo -e "Ваш Subspace farmer \e[31mбув встановлений неправильно\e[39m, виконайте перевстановлення."
+  echo -e "Ваш Subspace farmer \e[91mбув встановлений неправильно\e[39m, виконайте перевстановлення."
 fi
