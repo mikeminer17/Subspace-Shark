@@ -18,8 +18,8 @@ sleep 1 && curl -s https://raw.githubusercontent.com/f5nodes/logo/main/logo-shar
 
 cd $HOME
 rm -rf subspace*
-wget -O subspace-node https://github.com/subspace/subspace/releases/download/snapshot-2022-mar-09/subspace-node-ubuntu-x86_64-gemini-1a-2022-may-31
-wget -O subspace-farmer https://github.com/subspace/subspace/releases/download/snapshot-2022-mar-09/subspace-farmer-ubuntu-x86_64-gemini-1a-2022-may-31
+wget -O subspace-node https://github.com/subspace/subspace/releases/download/gemini-1a-2022-may-31/subspace-node-ubuntu-x86_64-gemini-1a-2022-may-31
+wget -O subspace-farmer https://github.com/subspace/subspace/releases/download/gemini-1a-2022-may-31/subspace-farmer-ubuntu-x86_64-gemini-1a-2022-may-31
 chmod +x subspace*
 mv subspace* /usr/local/bin/
 
