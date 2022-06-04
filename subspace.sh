@@ -13,14 +13,18 @@ bash_profile=$HOME/.bash_profile
 if [ -f "$bash_profile" ]; then
     . $HOME/.bash_profile
 fi
-sleep 1 && curl -s https://raw.githubusercontent.com/f5nodes/logo/main/logo-shark.sh | bash && sleep 1
+sleep 1 && curl -s https://api.nodes.guru/logo.sh | bash && sleep 1
+
 
 cd $HOME
 rm -rf subspace*
-wget -O subspace-node https://github.com/subspace/subspace/releases/download/gemini-1a-2022-may-31/subspace-node-ubuntu-x86_64-gemini-1a-2022-may-31
-wget -O subspace-farmer https://github.com/subspace/subspace/releases/download/gemini-1a-2022-may-31/subspace-farmer-ubuntu-x86_64-gemini-1a-2022-may-31
+wget -O subspace-node https://github.com/subspace/subspace/releases/download/gemini-1b-2022-june-03/subspace-node-ubuntu-x86_64-gemini-1b-2022-june-03 
+wget -O subspace-farmer https://github.com/subspace/subspace/releases/download/gemini-1b-2022-june-03/subspace-farmer-ubuntu-x86_64-gemini-1b-2022-june-03
 chmod +x subspace*
 mv subspace* /usr/local/bin/
+
+systemctl stop subspaced subspaced-farmer &>/dev/null
+rm -rf ~/.local/share/subspace*
 
 source ~/.bash_profile
 sleep 1
@@ -32,7 +36,7 @@ After=network.target
 [Service]
 User=$USER
 Type=simple
-ExecStart=$(which subspace-node) --chain gemini-1 --execution wasm --pruning 1024 --keep-blocks 1024 --validator --name $SUBSPACE_NODENAME
+ExecStart=$(which subspace-node) --chain gemini-1 --execution wasm --keep-blocks 1024 --pruning archive --validator --name $SUBSPACE_NODENAME
 Restart=on-failure
 LimitNOFILE=65535
 
